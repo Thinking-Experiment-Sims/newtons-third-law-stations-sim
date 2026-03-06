@@ -201,12 +201,24 @@
             <label>
               Source (BY)
               <select id="diagramSource">
-                <option value="Cart A">Cart A</option>
                 <option value="Cart B">Cart B</option>
+                <option value="Cart A">Cart A</option>
                 <option value="Hand">Hand</option>
                 <option value="Track">Track</option>
                 <option value="Wall">Wall</option>
                 <option value="Earth">Earth</option>
+              </select>
+            </label>
+
+            <label>
+              F_type
+              <select id="diagramForceType">
+                <option value="F_app">Applied (F_app)</option>
+                <option value="F_N">Normal (F_N)</option>
+                <option value="F_f">Friction (F_f)</option>
+                <option value="F_g">Gravity / Weight (F_g)</option>
+                <option value="F_T">Tension (F_T)</option>
+                <option value="F_s">Spring (F_s)</option>
               </select>
             </label>
 
@@ -233,6 +245,7 @@
               <button id="undoVectorBtn" type="button" class="ghost">Undo Last</button>
               <button id="clearSetBtn" type="button" class="ghost">Clear Set</button>
             </div>
+            <p id="diagramStatus" class="hint">Add a vector to start your force diagram.</p>
           </div>
 
           <div class="diagram-board-wrap">

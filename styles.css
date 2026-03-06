@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
 :root {
   --bg-950: #090b0f;
@@ -89,7 +89,7 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-family: "Cormorant Garamond", "Palatino Linotype", serif;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 
 .shell {

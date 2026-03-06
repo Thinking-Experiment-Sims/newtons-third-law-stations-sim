@@ -33,6 +33,7 @@ const stationPrompt = $("stationPrompt");
 const diagramSetSelect = $("diagramSet");
 const diagramObjectSelect = $("diagramObject");
 const diagramSourceSelect = $("diagramSource");
+const diagramForceTypeSelect = $("diagramForceType");
 const diagramDirectionSelect = $("diagramDirection");
 const diagramMagnitudeInput = $("diagramMagnitude");
 const diagramMagnitudeValue = $("diagramMagnitudeValue");
@@ -41,6 +42,7 @@ const undoVectorBtn = $("undoVectorBtn");
 const clearSetBtn = $("clearSetBtn");
 const diagramCanvas = $("diagramCanvas");
 const diagramList = $("diagramList");
+const diagramStatus = $("diagramStatus");
 
 const TRACK = {
   min: 0,
@@ -57,8 +59,8 @@ const PHYS = {
   dtMax: 1 / 120,
   dtStep: 1 / 240,
   defaultDuration: 3.8,
-  kContact: 2800,
-  cContact: 62,
+  kContact: 920,
+  cContact: 34,
   kWall: 5200,
   cWall: 120,
 };
@@ -69,7 +71,7 @@ const SCENARIOS = {
     type: "collision",
     stationPrompt:
       "Push Cart A into Cart B. Compare the two force curves at impact, then draw force diagrams for each cart.",
-    defaults: { mA: 0.5, mB: 0.5, vA: 1.2, vB: 0.0, pushForce: 12, sensorMode: "correct", sensorBias: 2 },
+    defaults: { mA: 0.5, mB: 0.5, vA: 1.4, vB: 0.0, pushForce: 12, sensorMode: "correct", sensorBias: 2 },
     duration: 3.3,
   },
   collision2: {
@@ -77,7 +79,7 @@ const SCENARIOS = {
     type: "collision",
     stationPrompt:
       "Repeat Collision 1 with more mass on Cart B. Compare speed change and force graphs between run 1 and run 2.",
-    defaults: { mA: 0.5, mB: 1.2, vA: 1.2, vB: 0.0, pushForce: 12, sensorMode: "correct", sensorBias: 2 },
+    defaults: { mA: 0.5, mB: 1.2, vA: 1.4, vB: 0.0, pushForce: 12, sensorMode: "correct", sensorBias: 2 },
     duration: 3.3,
   },
   staticPush: {
@@ -113,7 +115,7 @@ const SCENARIOS = {
     type: "collision",
     stationPrompt:
       "Try to make Cart A and Cart B graph lines look different using sensor setup errors. Explain why true action-reaction forces are still equal.",
-    defaults: { mA: 0.55, mB: 0.9, vA: 1.35, vB: 0.0, pushForce: 12, sensorMode: "bias", sensorBias: 2.5 },
+    defaults: { mA: 0.55, mB: 0.9, vA: 1.55, vB: 0.0, pushForce: 12, sensorMode: "bias", sensorBias: 2.5 },
     duration: 3.3,
   },
 };
@@ -232,6 +234,7 @@ function wireInputs() {
   undoVectorBtn.addEventListener("click", undoVector);
   clearSetBtn.addEventListener("click", clearSet);
   diagramSetSelect.addEventListener("change", () => {
+    diagramStatus.textContent = `Editing ${diagramSetSelect.value} diagram set.`;
     renderDiagramList();
     renderDiagramBoard();
   });
@@ -318,8 +321,8 @@ function initializeRunState(cfg) {
   state.carts.forceAB = 0;
 
   if (cfg.type === "collision") {
-    state.carts.xA = 2.1;
-    state.carts.xB = 5.3;
+    state.carts.xA = 2.55;
+    state.carts.xB = 3.9;
   } else if (cfg.type === "push-static" || cfg.type === "push-together") {
     state.carts.xA = 3.0;
     state.carts.xB = state.carts.xA + TRACK.cartWidth;
@@ -1053,13 +1056,10 @@ function addVector() {
   const set = diagramSetSelect.value;
   const on = diagramObjectSelect.value;
   const by = diagramSourceSelect.value;
-
-  if (on === by) {
-    statusLine.textContent = "Force labels must use different objects: On ___ by ___.";
-    return;
-  }
+  const forceType = diagramForceTypeSelect.value;
 
   const vector = {
+    forceType,
     on,
     by,
     dir: diagramDirectionSelect.value,
@@ -1067,6 +1067,7 @@ function addVector() {
   };
 
   state.diagrams[set].push(vector);
+  diagramStatus.textContent = `${forceType} added to ${set} diagram.`;
   renderDiagramList();
   renderDiagramBoard();
 }
@@ -1074,6 +1075,7 @@ function addVector() {
 function undoVector() {
   const set = diagramSetSelect.value;
   state.diagrams[set].pop();
+  diagramStatus.textContent = `Removed last vector from ${set}.`;
   renderDiagramList();
   renderDiagramBoard();
 }
@@ -1081,6 +1083,7 @@ function undoVector() {
 function clearSet() {
   const set = diagramSetSelect.value;
   state.diagrams[set] = [];
+  diagramStatus.textContent = `Cleared all vectors in ${set}.`;
   renderDiagramList();
   renderDiagramBoard();
 }
@@ -1092,14 +1095,14 @@ function renderDiagramList() {
   diagramList.textContent = "";
   if (!vectors.length) {
     const item = document.createElement("li");
-    item.textContent = "No vectors yet.";
+    item.textContent = `No vectors in ${set}.`;
     diagramList.append(item);
     return;
   }
 
   vectors.forEach((v, idx) => {
     const item = document.createElement("li");
-    item.textContent = `${idx + 1}. Force on ${v.on} by ${v.by}, ${v.dir}, magnitude ${v.mag}`;
+    item.textContent = `${idx + 1}. ${v.forceType} on ${v.on} by ${v.by}, ${v.dir}, magnitude ${v.mag}`;
     diagramList.append(item);
   });
 }
@@ -1194,7 +1197,7 @@ function drawDiagramSet(ctx, { title, vectors, x0, x1, y0, y1, palette }) {
 
     ctx.fillStyle = palette.graphText;
     ctx.font = "11px IBM Plex Sans, sans-serif";
-    ctx.fillText(`On ${v.on} by ${v.by}`, startX + dx * 0.56 + 4, startY + dy * 0.56 - 4);
+    ctx.fillText(`${v.forceType}: on ${v.on} by ${v.by}`, startX + dx * 0.56 + 4, startY + dy * 0.56 - 4);
   });
 }
 
