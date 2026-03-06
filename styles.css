@@ -1,0 +1,462 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg-950: #090b0f;
+  --bg-900: #11141b;
+  --bg-800: #1e2430;
+  --text-100: #eef2f9;
+  --text-300: #c9d1df;
+  --text-500: #a9b2c3;
+  --gold-500: #c8a24a;
+  --gold-400: #d8b767;
+  --gold-300: #e5cc8f;
+
+  --surface: rgba(17, 20, 27, 0.93);
+  --surface-alt: rgba(30, 36, 48, 0.9);
+  --border: rgba(229, 204, 143, 0.24);
+  --shadow-lg: 0 16px 30px rgba(0, 0, 0, 0.34);
+
+  --app-bg: radial-gradient(circle at 12% 9%, #222b3c 0%, #141925 40%, #090b0f 100%);
+  --hero-bg: linear-gradient(130deg, rgba(20, 24, 33, 0.95), rgba(10, 12, 18, 0.95));
+  --hero-text: #fff6df;
+
+  --graph-bg: #0f1420;
+  --canvas-border: rgba(229, 204, 143, 0.26);
+  --table-head: rgba(30, 36, 48, 0.95);
+}
+
+body[data-theme="light"] {
+  --bg-950: #e9f4fb;
+  --bg-900: #fff4dd;
+  --bg-800: #ffffff;
+  --text-100: #123140;
+  --text-300: #4b6570;
+  --text-500: #5c7078;
+  --gold-500: #0f7e9b;
+  --gold-400: #0b5f77;
+  --gold-300: #d67b19;
+
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-alt: rgba(247, 252, 255, 0.98);
+  --border: #c8dbe3;
+  --shadow-lg: 0 12px 24px rgba(12, 54, 68, 0.12);
+
+  --app-bg:
+    radial-gradient(1200px 700px at 8% 2%, rgba(19, 143, 176, 0.18), transparent 62%),
+    radial-gradient(900px 600px at 92% 98%, rgba(220, 132, 32, 0.18), transparent 66%),
+    linear-gradient(165deg, #e9f4fb, #fff4dd);
+  --hero-bg: linear-gradient(160deg, #ffffff, #f7fbfd);
+  --hero-text: #123140;
+
+  --graph-bg: #f8fcff;
+  --canvas-border: #bcd3dc;
+  --table-head: #edf7fb;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  color: var(--text-100);
+  background: var(--app-bg);
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(229, 204, 143, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229, 204, 143, 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 95%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: "Cormorant Garamond", "Palatino Linotype", serif;
+}
+
+.shell {
+  width: min(1520px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.hero {
+  margin-top: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  padding-right: 12rem;
+  background: var(--hero-bg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: var(--gold-500);
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold-400);
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin-top: 0.3rem;
+  font-size: clamp(1.65rem, 2.3vw, 2.8rem);
+  line-height: 1.08;
+  color: var(--hero-text);
+  overflow-wrap: anywhere;
+}
+
+.subtitle {
+  margin: 0.34rem 0 0;
+  color: var(--text-300);
+  max-width: 84ch;
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.hero-top > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 0.35rem;
+}
+
+.display-toggle {
+  min-width: 154px;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 2;
+}
+
+.app-layout {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 1rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.26);
+  min-width: 0;
+}
+
+.full {
+  grid-column: span 12;
+}
+
+.wide {
+  grid-column: span 8;
+}
+
+.narrow {
+  grid-column: span 4;
+}
+
+.inquiry-grid {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.inquiry-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.72rem;
+  background: var(--surface-alt);
+}
+
+.inquiry-card h3 {
+  font-size: 1.06rem;
+  margin-bottom: 0.3rem;
+}
+
+.inquiry-card p {
+  margin: 0;
+  color: var(--text-300);
+}
+
+.sim-toolbar {
+  margin-top: 0.45rem;
+}
+
+.hint {
+  margin: 0.5rem 0 0;
+  color: var(--text-300);
+  font-size: 0.92rem;
+  white-space: pre-line;
+}
+
+.sim-canvas {
+  margin-top: 0.62rem;
+  width: 100%;
+  display: block;
+  border: 1px solid var(--canvas-border);
+  border-radius: 12px;
+  background: var(--graph-bg);
+}
+
+.table-wrap {
+  margin-top: 0.55rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 660px;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+  font-size: 0.82rem;
+}
+
+th {
+  background: var(--table-head);
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--text-300);
+  font-size: 0.92rem;
+}
+
+input,
+select,
+button,
+output {
+  font: inherit;
+}
+
+input,
+select,
+output {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  color: var(--text-100);
+  padding: 0.55rem 0.62rem;
+}
+
+button {
+  border: 1px solid var(--gold-500);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
+  color: #2c1d06;
+  font-weight: 700;
+  padding: 0.58rem 0.84rem;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: rgba(200, 162, 74, 0.11);
+  color: var(--text-100);
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 2px;
+}
+
+.controls-grid {
+  margin-top: 0.62rem;
+  display: grid;
+  gap: 0.62rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.control-span-2 {
+  grid-column: span 2;
+}
+
+.range-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.range-row output {
+  text-align: center;
+  padding: 0.42rem 0.35rem;
+}
+
+.button-row {
+  margin-top: 0.72rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.metric-grid {
+  margin-top: 0.64rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.metric-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.62rem;
+  background: var(--surface-alt);
+}
+
+.metric-card h4 {
+  margin: 0;
+  font-size: 1.01rem;
+}
+
+.metric-card p {
+  margin: 0.24rem 0 0;
+  color: var(--text-300);
+  font-size: 0.88rem;
+}
+
+.diagram-layout {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+}
+
+.diagram-controls {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-alt);
+  padding: 0.72rem;
+  display: grid;
+  gap: 0.58rem;
+  align-content: start;
+}
+
+.diagram-board-wrap {
+  min-width: 0;
+}
+
+.diagram-list-wrap {
+  margin-top: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  padding: 0.62rem;
+}
+
+.diagram-list-wrap h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.diagram-list {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.diagram-list li {
+  margin: 0.2rem 0;
+  color: var(--text-300);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1180px) {
+  .wide,
+  .narrow {
+    grid-column: span 12;
+  }
+
+  .diagram-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(1520px, calc(100% - 1rem));
+  }
+
+  .hero {
+    padding-right: 1rem;
+  }
+
+  .display-toggle {
+    position: static;
+    margin-top: 0.35rem;
+  }
+
+  .hero-top {
+    flex-direction: column;
+  }
+
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-span-2 {
+    grid-column: span 1;
+  }
+
+  .inquiry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

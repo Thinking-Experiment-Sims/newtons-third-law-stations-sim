@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newton's Third Law Stations Simulation | The Thinking Experiment</title>
+    <meta
+      name="description"
+      content="Force-focused collision and pushing simulation aligned to Newton's Third Law Stations 1 and 4."
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-16.png"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <header class="hero shell">
+      <div class="hero-top">
+        <div>
+          <p class="kicker">The Thinking Experiment</p>
+          <h1>Newton's Third Law Stations 1 and 4</h1>
+          <p class="subtitle">
+            Run collision and push scenarios, read force graphs like Graphical Analysis, compare cases, and build your own
+            force diagrams using <strong>On ___ by ___</strong> labels.
+          </p>
+        </div>
+        <button id="themeToggleBtn" class="display-toggle" type="button">Light mode</button>
+      </div>
+    </header>
+
+    <main class="shell app-layout">
+      <section class="panel full">
+        <h2>Lab Guide</h2>
+        <p class="hint">
+          Before collecting data, assume sensors are zeroed and one force sensor is reversed so signs are consistent.
+          Use the <strong>Sensor Setup</strong> control to simulate setup mistakes for the Station 4 challenge.
+        </p>
+        <div class="inquiry-grid">
+          <article class="inquiry-card">
+            <h3>Station 1 · Collision 1</h3>
+            <p>Use <strong>Collision 1</strong>, run the trial, and read both force curves at impact.</p>
+          </article>
+          <article class="inquiry-card">
+            <h3>Station 1 · Collision 2</h3>
+            <p>Switch to <strong>Collision 2 (heavier B)</strong> and compare speed change and force data.</p>
+          </article>
+          <article class="inquiry-card">
+            <h3>Station 4 · Push Scenarios</h3>
+            <p>Run the push presets, sketch predicted vs measured diagrams, then check what stays true.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel wide">
+        <h2>Simulation and Force Graphs</h2>
+        <div class="sim-toolbar">
+          <p id="statusLine" class="hint" role="status">Choose a scenario and click Run Trial.</p>
+          <p id="liveReadout" class="hint" aria-live="polite"></p>
+        </div>
+
+        <canvas id="trackCanvas" class="sim-canvas" width="1200" height="300" aria-label="Cart track animation"></canvas>
+
+        <h3>Force vs Time (Graphical Analysis Style)</h3>
+        <canvas id="forceCanvas" class="sim-canvas" width="1200" height="300" aria-label="Force graph"></canvas>
+        <p id="probeReadout" class="hint">Run a trial, then hover or tap the graph to read force values.</p>
+
+        <h3>Run Comparison</h3>
+        <div class="table-wrap">
+          <table id="historyTable">
+            <thead>
+              <tr>
+                <th>Run</th>
+                <th>Scenario</th>
+                <th>Peak |F| (N)</th>
+                <th>Impulse A (N·s)</th>
+                <th>Impulse B (N·s)</th>
+                <th>&Delta;v A (m/s)</th>
+                <th>&Delta;v B (m/s)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel narrow">
+        <h2>Controls</h2>
+        <div class="controls-grid">
+          <label class="control-span-2">
+            Scenario
+            <select id="scenarioSelect"></select>
+          </label>
+
+          <label>
+            Cart A mass (kg)
+            <div class="range-row">
+              <input id="massA" type="range" min="0.25" max="1.5" step="0.05" value="0.5" />
+              <output id="massAValue">0.50</output>
+            </div>
+          </label>
+
+          <label>
+            Cart B mass (kg)
+            <div class="range-row">
+              <input id="massB" type="range" min="0.25" max="1.8" step="0.05" value="0.5" />
+              <output id="massBValue">0.50</output>
+            </div>
+          </label>
+
+          <label>
+            Cart A start velocity (m/s)
+            <div class="range-row">
+              <input id="vA" type="range" min="-2.0" max="2.5" step="0.05" value="1.2" />
+              <output id="vAValue">1.20</output>
+            </div>
+          </label>
+
+          <label>
+            Cart B start velocity (m/s)
+            <div class="range-row">
+              <input id="vB" type="range" min="-2.0" max="2.0" step="0.05" value="0.0" />
+              <output id="vBValue">0.00</output>
+            </div>
+          </label>
+
+          <label class="control-span-2">
+            Push force level (N)
+            <div class="range-row">
+              <input id="pushForce" type="range" min="2" max="28" step="0.5" value="12" />
+              <output id="pushForceValue">12.0</output>
+            </div>
+          </label>
+
+          <label class="control-span-2">
+            Sensor setup
+            <select id="sensorMode">
+              <option value="correct">Zeroed + one sensor reversed (correct)</option>
+              <option value="bias">Not zeroed (offset mismatch)</option>
+              <option value="orientation">Second sensor not reversed</option>
+            </select>
+          </label>
+
+          <label class="control-span-2">
+            Sensor offset for challenge (N)
+            <div class="range-row">
+              <input id="sensorBias" type="range" min="0" max="6" step="0.25" value="2" />
+              <output id="sensorBiasValue">2.00</output>
+            </div>
+          </label>
+        </div>
+
+        <div class="button-row">
+          <button id="runBtn" type="button">Run Trial</button>
+          <button id="pauseBtn" type="button" class="ghost">Pause</button>
+          <button id="resetBtn" type="button" class="ghost">Reset</button>
+        </div>
+
+        <h3>Station Prompts</h3>
+        <p id="stationPrompt" class="hint"></p>
+
+        <h3>Summary Metrics</h3>
+        <div class="metric-grid" id="metricsPanel"></div>
+      </section>
+
+      <section class="panel full">
+        <h2>Force Diagram Builder</h2>
+        <p class="hint">
+          Build vectors in the required format: <strong>Force On ____ By ____</strong>. Use one set for prediction and one
+          set for measured results.
+        </p>
+
+        <div class="diagram-layout">
+          <div class="diagram-controls">
+            <label>
+              Diagram set
+              <select id="diagramSet">
+                <option value="prediction">Prediction</option>
+                <option value="measured">From Graph</option>
+              </select>
+            </label>
+
+            <label>
+              Object (ON)
+              <select id="diagramObject">
+                <option value="Cart A">Cart A</option>
+                <option value="Cart B">Cart B</option>
+              </select>
+            </label>
+
+            <label>
+              Source (BY)
+              <select id="diagramSource">
+                <option value="Cart A">Cart A</option>
+                <option value="Cart B">Cart B</option>
+                <option value="Hand">Hand</option>
+                <option value="Track">Track</option>
+                <option value="Wall">Wall</option>
+                <option value="Earth">Earth</option>
+              </select>
+            </label>
+
+            <label>
+              Direction
+              <select id="diagramDirection">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+                <option value="up">Up</option>
+                <option value="down">Down</option>
+              </select>
+            </label>
+
+            <label>
+              Magnitude level
+              <div class="range-row">
+                <input id="diagramMagnitude" type="range" min="1" max="10" step="1" value="5" />
+                <output id="diagramMagnitudeValue">5</output>
+              </div>
+            </label>
+
+            <div class="button-row">
+              <button id="addVectorBtn" type="button">Add Vector</button>
+              <button id="undoVectorBtn" type="button" class="ghost">Undo Last</button>
+              <button id="clearSetBtn" type="button" class="ghost">Clear Set</button>
+            </div>
+          </div>
+
+          <div class="diagram-board-wrap">
+            <canvas id="diagramCanvas" class="sim-canvas" width="1200" height="360" aria-label="Force diagram board"></canvas>
+            <div class="diagram-list-wrap">
+              <h3>Vectors in Current Set</h3>
+              <ul id="diagramList" class="diagram-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
