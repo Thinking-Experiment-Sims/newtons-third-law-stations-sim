@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
 :root {
+
   --bg-950: #e9f4fb;
   --bg-900: #fff4dd;
   --bg-800: #ffffff;
@@ -12,20 +13,20 @@
   --border: #c8dbe3;
   --shadow-lg: 0 12px 24px rgba(12, 54, 68, 0.12);
 
-  --bg-950: #090b0f;
-  --bg-900: #11141b;
-  --bg-800: #1e2430;
-  --text-100: #eef2f9;
-  --text-300: #c9d1df;
+  --bg-950: #e9f4fb;
+  --bg-900: #fff4dd;
+  --bg-800: #ffffff;
+  --text-100: #123140;
+  --text-300: #4b6570;
   --text-500: #a9b2c3;
-  --gold-500: #c8a24a;
-  --gold-400: #d8b767;
+  --gold-500: #0f7e9b;
+  --gold-400: #0b5f77;
   --gold-300: #e5cc8f;
 
-  --surface: rgba(17, 20, 27, 0.93);
+  --surface: rgba(255, 255, 255, 0.96);
   --surface-alt: rgba(30, 36, 48, 0.9);
-  --border: rgba(229, 204, 143, 0.24);
-  --shadow-lg: 0 16px 30px rgba(0, 0, 0, 0.34);
+  --border: #c8dbe3;
+  --shadow-lg: 0 12px 24px rgba(12, 54, 68, 0.12);
 
   --app-bg: radial-gradient(circle at 12% 9%, #222b3c 0%, #141925 40%, #090b0f 100%);
   --hero-bg: linear-gradient(130deg, rgba(20, 24, 33, 0.95), rgba(10, 12, 18, 0.95));
@@ -34,6 +35,7 @@
   --graph-bg: #0f1420;
   --canvas-border: rgba(229, 204, 143, 0.26);
   --table-head: rgba(30, 36, 48, 0.95);
+
 }
 
 
@@ -159,10 +161,9 @@ h4 {
 .panel {
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--surface);
   padding: 1rem;
+  background: var(--surface);
   box-shadow: 0 6px 16px rgba(12, 54, 68, 0.08);
-  min-width: 0;
 }
 
 .full {
@@ -274,13 +275,8 @@ button {
   background: linear-gradient(160deg, #0d839f, #0b5f77);
   color: #ffffff;
   font-weight: 700;
-
-  border: 1px solid var(--gold-500);
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--gold-500), var(--gold-400));
-  color: #2c1d06;
-  font-weight: 700;
-  padding: 0.58rem 0.84rem;
+  border: 1px solid #0a5d74;
+  padding: 0.58rem 0.82rem;
   cursor: pointer;
 }
 
