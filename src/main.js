@@ -27,7 +27,6 @@ const sensorBiasValue = $("sensorBiasValue");
 const runBtn = $("runBtn");
 const pauseBtn = $("pauseBtn");
 const resetBtn = $("resetBtn");
-const themeToggleBtn = $("themeToggleBtn");
 const stationPrompt = $("stationPrompt");
 
 const diagramSetSelect = $("diagramSet");
@@ -223,8 +222,6 @@ function wireInputs() {
   runBtn.addEventListener("click", startTrial);
   pauseBtn.addEventListener("click", togglePause);
   resetBtn.addEventListener("click", () => resetTrial({ keepHistory: true }));
-
-  themeToggleBtn.addEventListener("click", toggleTheme);
 
   forceCanvas.addEventListener("mousemove", onGraphPointerMove);
   forceCanvas.addEventListener("click", onGraphClick);
@@ -742,7 +739,7 @@ function updateLiveReadout() {
 }
 
 function getPalette() {
-  const light = document.body.dataset.theme === "light";
+  const light = true;
 
   if (light) {
     return {
@@ -1291,18 +1288,9 @@ function escapeHtml(value) {
 }
 
 function restoreTheme() {
-  const saved = localStorage.getItem("third-law-theme") || "dark";
-  setTheme(saved);
-}
-
-function toggleTheme() {
-  const next = document.body.dataset.theme === "light" ? "dark" : "light";
-  setTheme(next);
+  setTheme("light");
 }
 
 function setTheme(value) {
-  document.body.dataset.theme = value;
-  localStorage.setItem("third-law-theme", value);
-  themeToggleBtn.textContent = value === "light" ? "Dark mode" : "Light mode";
   if (state.cfg) renderAll();
 }
